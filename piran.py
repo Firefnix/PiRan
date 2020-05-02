@@ -6,7 +6,7 @@ from os import remove
 class Random:
     """Use random numbers, bytes and chars Random."""
 
-    def __init__(self, pi_file: str = "pi.txt", cursor: int = 1) -> None:
+    def __init__(self, pi_file: str = "pi.txt", cursor: int = -1) -> None:
         """Check if the pi file exists and load the cursor."""
         if isfile(pi_file) is False:
             raise FileNotFoundError(f"{pi_file} not found")
