@@ -1,5 +1,5 @@
 """The PiRan module."""
-from os.path import isfile, join as osjoin, getsize
+from os.path import isfile, join as osjoin, getsize as get_len_of_file
 from os import remove, getcwd
 from sys import maxsize, stdout, stderr
 from ctypes import CDLL, cast as c_cast, c_char_p
@@ -55,19 +55,18 @@ class Random:
         """Delete the cursor file."""
         remove(self._cursor_file_name)
 
-    @property
-    def cursor_max(self) -> int:
-        return getsize(self._cursor_file_name)
+    def digits(self, length: int) -> str:
+        with open(self._pi_file_name) as pi_file:
+            return pi_file.read()[self.get_cursor():self.add_to_cursor(length)]
+
+    def get_cursor_max(self) -> int:
+        return get_len_of_file(self._cursor_file_name)
 
     def uint(self, max: int) -> int:
         return int(self.digits(required_digits(max))) % max
 
     def sint(self, min: int, max: int) -> int:
         return self.uint(max-min) - max
-
-    def digits(self, length: int) -> str:
-        with open(self._pi_file_name) as pi_file:
-            return pi_file.read()[self.get_cursor():self.add_to_cursor(length)]
 
 
 def build() -> None:
@@ -76,7 +75,6 @@ def build() -> None:
         "gcc -O2 -shared -Wl,-soname,pi -o pi.so -fPIC pi.c -lgmp",
         shell=True, check=True
     )
-
 
 def compute(digits: int, lib_file_name: str="./pi.so", pi_file_name: str="./pi") -> None:
     pi_lib: CDLL = CDLL(lib_file_name)
