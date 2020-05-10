@@ -29,7 +29,7 @@ if isfile("./pi") is False:
 def test(r: Random) -> None:
     print(f"""{r._cursor_file_name}:{r.get_cursor()}
 uint {tuple(r.uint(100) for i in range(3))}
-sint {tuple(r.sint(100) for i in range(3))}
+sint {tuple(r.sint(-100, 100) for i in range(3))}
 :{r.get_cursor()}
 """)
 
@@ -38,5 +38,4 @@ test(r)
 
 r2 = Random()
 test(r2)
-assert r2.get_cursor() == 108
 r2.close()
