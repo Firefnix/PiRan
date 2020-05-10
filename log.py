@@ -1,35 +1,37 @@
 """Log system for PiRan."""
-from typing import Union, Tuple
-
+from typing import Union, Tuple, Optional
+from platform import system
+from sys import argv
 
 def is_ms_windows() -> bool:
     """Return True if the system is Microsoft Windows, else False."""
-    return "win" in __import__("platform").system().lower()
+    return "win" in system().lower()
 
 
 def os_init() -> None:
     """Initialize OS's console."""
-    if is_ms_windows() is False:
-        return
-    kernel = __import__("ctypes").windll.kernel32
-    kernel.SetConsoleMode(kernel.GetStdHandle(-11), 7)
+    if is_ms_windows() is True:
+        from ctypes import windll
+        kernel = windll.kernel32
+        kernel.SetConsoleMode(kernel.GetStdHandle(-11), 7)
 
 NO_ARG: int = -1
 
 class Flag:
-    _args: Tuple[str] = tuple(__import__("sys").argv)
+    _args: Tuple[str, ...] = tuple(argv)
     _args_len: int = len(_args)
 
     @staticmethod
     def is_an_arg(value: str) -> bool:
         return value == '-'
-    def __init__(self, short_name: str = '', long_name: str = '', has_value: bool = False) -> None:
+    def __init__(self, short_name: str, long_name: str, has_value: bool = False) -> None:
         """Create a Flag object"""
         self.short: str = short_name
         self.long: str = long_name
         self.has_value: bool = has_value
+
         self.pos: int = self.get_position()
-        self.next = self.get_next()
+        self.next: Optional[str] = self.get_next()
         self.val: Union[str, None] = self.get_value()
 
     def __str__(self) -> str:
@@ -49,13 +51,13 @@ class Flag:
                     return i
         return NO_ARG
 
-    def get_next(self) -> Union[None, str]:
+    def get_next(self) -> Optional[str]:
         """Returns the next argument or None"""
         if self.pos == NO_ARG or self.pos+1 >= self._args_len:
             return None
         return self._args[self.pos+1]
 
-    def get_value(self) -> Union[None, str]:
+    def get_value(self) -> Optional[str]:
         """Returns the value corresponding to the flag or None
         (if has_value is False, None is returned anyway)"""
         if self.has_value is False or self.pos == NO_ARG:
