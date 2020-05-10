@@ -26,15 +26,17 @@ verbose = Flag('v', '--verbose')
 if isfile("./pi") is False:
     compute(10_000)
 
+def test(r: Random) -> None:
+    print(f"""{r._cursor_file_name}:{r.get_cursor()}
+"r.uint" {tuple(r.uint(100) for i in range(3))}
+"r.sint" {tuple(r.sint(100) for i in range(3))}
+:{r.get_cursor()}
+""")
+
 r = Random(cursor="cursor_7f04414ce640")
-print("r.uint", *(r.uint for i in range(3)))
-print("r.sint", *(r.sint for i in range(3)))
-print(r.cursor)
-print()
+test(r)
 
 r2 = Random()
-print(r2._cursor_file_name)
-print("r2.uint", *(r2.uint for i in range(3)))
-print("r2.sint", *(r2.sint for i in range(3)))
-print(r2.cursor)
+test(r2)
+assert r2.get_cursor() == 108
 r2.close()
