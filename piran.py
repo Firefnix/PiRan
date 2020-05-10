@@ -11,16 +11,10 @@ __version__ = "1.0"
 
 CCharPointer =  Optional[bytes]
 
-piran_verbose: bool = False
 piran_path: str = getcwd()
 
 def required_digits(max_value: int) -> int:
     return len(str(max_value + 1))
-
-def verb_print(*args: object, sep: str=' ', end: str='\n',
-        file: IO[str]=stdout, flush: bool=False) -> None:
-    if piran_verbose is True:
-        print(*args, sep=sep, end=end, file=file, flush=flush)
 
 
 class Random:
@@ -49,7 +43,6 @@ class Random:
         """Save the cursor value in cursor_file."""
         if not isinstance(value, int):
             raise TypeError("must be an int")
-        verb_print("save:", value, "in", self._cursor_file_name)
         with open(self._cursor_file_name, "w") as cursor_file:
             cursor_file.write(str(value))
 
@@ -60,7 +53,6 @@ class Random:
 
     def close(self) -> None:
         """Delete the cursor file."""
-        verb_print("remove:", self._cursor_file_name)
         remove(self._cursor_file_name)
 
     @property
@@ -84,7 +76,6 @@ def build() -> None:
         "gcc -O2 -shared -Wl,-soname,pi -o pi.so -fPIC pi.c -lgmp",
         shell=True, check=True
     )
-    verb_print("compiled: pi.c -> pi.so")
 
 
 def compute(digits: int, lib_file_name: str="./pi.so", pi_file_name: str="./pi") -> None:
@@ -93,12 +84,10 @@ def compute(digits: int, lib_file_name: str="./pi.so", pi_file_name: str="./pi")
         raise ValueError("'digits' must be an unsigned int")
 
     pi_char_p: CCharPointer = pi_lib.pi_str(digits)
-    verb_print(f"allocated: {hex(cast(int, pi_char_p))}")
     pi_c_str = c_cast(cast(Union, pi_char_p), c_char_p).value
     if pi_c_str is None:
         raise ValueError("pi_str returned NULL")
 
-    verb_print(f"freed: {hex(cast(int, pi_char_p))}")
     pi_lib.free_string(pi_char_p)
     pi_str = pi_c_str.decode('ascii')
 
