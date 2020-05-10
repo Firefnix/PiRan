@@ -21,15 +21,15 @@ if is_ms_windows() is True:
 if isfile("./pi.so") is False:
     build()
 
-verbose = Flag('v', '--verbose')
+piran_verbose = Flag('v', '--verbose').exists()
 
 if isfile("./pi") is False:
     compute(10_000)
 
 def test(r: Random) -> None:
     print(f"""{r._cursor_file_name}:{r.get_cursor()}
-"r.uint" {tuple(r.uint(100) for i in range(3))}
-"r.sint" {tuple(r.sint(100) for i in range(3))}
+uint {tuple(r.uint(100) for i in range(3))}
+sint {tuple(r.sint(100) for i in range(3))}
 :{r.get_cursor()}
 """)
 
