@@ -12,10 +12,10 @@ __version__ = "1.0"
 CCharPointer =  Optional[bytes]
 
 piran_verbose: bool = False
-piran_pad: int = len(str(maxsize)) - 1
 piran_path: str = getcwd()
-piran_uint_limit = int('9' * piran_pad)
 
+def required_digits(max_value: int) -> int:
+    return len(str(max_value + 1))
 
 def verb_print(*args: object, sep: str=' ', end: str='\n',
         file: IO[str]=stdout, flush: bool=False) -> None:
@@ -67,18 +67,15 @@ class Random:
     def cursor_max(self) -> int:
         return getsize(self._cursor_file_name)
 
-    def _next_digits(self, digits: int=piran_pad) -> str:
-        with open(self._pi_file_name) as pi_file:
-            return pi_file.read()[self.get_cursor():self.add_to_cursor(digits)]
-
     def uint(self, max: int) -> int:
-        return int(self._next_digits()) % max
+        return int(self.digits(required_digits(max))) % max
 
-    def sint(self, max: int) -> int:
-        return int(self._next_digits()) - int(piran_uint_limit/2) % max
+    def sint(self, min: int, max: int) -> int:
+        return self.uint(max-min) - max
 
     def digits(self, length: int) -> str:
-        return self._next_digits(length)
+        with open(self._pi_file_name) as pi_file:
+            return pi_file.read()[self.get_cursor():self.add_to_cursor(length)]
 
 
 def build() -> None:
