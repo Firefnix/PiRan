@@ -10,6 +10,31 @@
  * gcc -O2 -shared -Wl,-soname,pi -o pi.so -fPIC pi.c -lgmp
  */
 
+int calc_digits_and_write_in(unsigned long digits, const char *file_name);
+void free_string(char *ptr);
+char *pi_str(unsigned long digits);
+
+/*  */
+int calc_digits_and_write_in(unsigned long digits, const char *file_name) {
+	FILE *pi_file = fopen(file_name, "w");
+	int return_value = 0;
+	if (pi_file == NULL)
+		return -1;
+	char *pi_digits = pi_str(digits);
+
+	if (pi_digits == NULL || fprintf(pi_file, "%s", pi_digits) < 0)
+		return_value = -1;
+
+	free_string(pi_digits);
+	fclose(pi_file);
+	return return_value;
+}
+
+void free_string(char *ptr) {
+	free(ptr);
+}
+
+/* Calculate with the chudnovisky method */
 char *pi_str(unsigned long digits) {
 	mpf_t result, con, A, B, F, sum;
 	mpz_t a, b, c, d, e;
@@ -72,8 +97,4 @@ char *pi_str(unsigned long digits) {
 	mpz_clears(a, b, c, d, e, NULL);
 
 	return output;
-}
-
-void free_string(char *ptr) {
-	free(ptr);
 }
