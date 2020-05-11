@@ -1,5 +1,5 @@
 """The PiRan module."""
-from os.path import isfile, join as osjoin, getsize as get_len_of_file
+from os.path import isfile, getsize as get_len_of_file
 from os import remove, getcwd
 from sys import maxsize, stdout, stderr
 from ctypes import CDLL, cast as c_cast, c_char_p
@@ -9,9 +9,6 @@ __author__ = "Firefnix"
 __license__ = "GPL-3-or-later"
 __version__ = "1.0"
 
-CCharPointer =  Optional[bytes]
-
-piran_path: str = getcwd()
 
 def required_digits(max_value: int) -> int:
     return len(str(max_value + 1))
@@ -32,7 +29,7 @@ class Random:
         else:
             self._cursor_file_name = f"cursor_{hex(id(self))[2:]}"
             self.set_cursor(cast(int, cursor or 0))
-        self._pi_file_name: str = osjoin(piran_path, pi_file_name)
+        self._pi_file_name: str = pi_file_name
 
     def get_cursor(self) -> int:
         """Position in the PI file."""
@@ -77,17 +74,8 @@ def build() -> None:
     )
 
 def compute(digits: int, lib_file_name: str="./pi.so", pi_file_name: str="./pi") -> None:
-    pi_lib: CDLL = CDLL(lib_file_name)
     if digits < 0:
         raise ValueError("'digits' must be an unsigned int")
-
-    pi_char_p: CCharPointer = pi_lib.pi_str(digits)
-    pi_c_str = c_cast(cast(Union, pi_char_p), c_char_p).value
-    if pi_c_str is None:
-        raise ValueError("pi_str returned NULL")
-
-    pi_lib.free_string(pi_char_p)
-    pi_str = pi_c_str.decode('ascii')
-
-    with open(pi_file_name, "w") as pi_file:
-        pi_file.write(pi_str)
+    pi_lib: CDLL = CDLL(lib_file_name)
+    if cast(int, pi_lib.calc_digits_and_write_in(digits, pi_file_name.encode("utf8"))):
+        raise MemoryError("Could")
