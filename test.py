@@ -5,11 +5,11 @@ from typing import Optional, Union
 from subprocess import run
 from os.path import isfile
 
-from piran import Random, build, compute, piran_verbose
+from piran import Random, build, compute
 from log import is_ms_windows, Flag
 
-SPEED_TEST_DIGITS: int = 10_000 # normally less than a second
-TEST_DIGITS: int = 100_000 # normally less than a minute
+SPEED_TEST_DIGITS = 10_000 # normally less than a second
+TEST_DIGITS = 100_000 # normally less than a minute
 CCharPointer =  Optional[bytes]
 CString = bytes
 
@@ -24,7 +24,8 @@ if isfile("./pi.so") is False:
 piran_verbose = Flag('v', '--verbose').exists()
 
 if isfile("./pi") is False:
-    compute(10_000)
+    print("Computing hundred thousand decimals of π.")
+    compute(TEST_DIGITS)
 
 def test(r: Random) -> None:
     print(f"""{r._cursor_file_name}:{r.get_cursor()}
@@ -37,5 +38,6 @@ r = Random(cursor="cursor_7f04414ce640")
 test(r)
 
 r2 = Random()
+test(r2)
 test(r2)
 r2.close()
