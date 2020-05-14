@@ -1,5 +1,10 @@
-from setuptools import setup, find_packages
 from os import path
+from setuptools import setup, Extension, find_packages
+
+pigen_module = Extension(
+    name='pigen',
+    sources = ['src/piran/pigen.c']
+)
 
 here = path.abspath(path.dirname(__file__))
 github = 'https://github.com/Firefnix/PiRan'
@@ -9,7 +14,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 # python3 -m pip install -e git+https://https://github.com/Firefnix/PiRan.git#egg=piran
 setup(
     name='piran',
-    version='0.1a0',
+    version='0.1a0.1',
     description='"Random" numbers based in pi\'s decimals',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -31,5 +36,6 @@ setup(
         'Bug Reports': 'https://github.com/Firefnix/PiRan/issues',
         'Source': github
     },
-    license='LGPLv3'
+    license='LGPLv3',
+    ext_modules=[pigen_module]
 )
