@@ -12,9 +12,12 @@ __version__ = "1.0"
 location = abspath(dirname(__file__))
 del dirname, abspath
 
-def required_digits(max_value: int) -> int:
+def _required_digits(max_value: int) -> int:
     return len(str(max_value + 1))
 
+def _assert_uint(arg: object) -> None:
+    if (not isinstance(arg, int)) or arg < 0:
+        raise ValueError(f"Must be an positive integer (is {arg})")
 
 class Random:
     """Use random numbers, bytes and chars."""
@@ -38,12 +41,12 @@ class Random:
         with open(self._cursor_file_name) as cursor_file:
             return int(cursor_file.read())
 
-    def set_cursor(self, value: int) -> None:
+    def set_cursor(self, value: int) -> int:
         """Save the cursor value in cursor_file."""
-        if not isinstance(value, int):
-            raise TypeError("must be an int")
+        _assert_uint(value)
         with open(self._cursor_file_name, "w") as cursor_file:
             cursor_file.write(str(value))
+        return value
 
     def add_to_cursor(self, value: int) -> int:
         """Return the changed cursor"""
@@ -62,10 +65,10 @@ class Random:
         return get_len_of_file(self._cursor_file_name)
 
     def uint(self, max: int) -> int:
-        return int(self.digits(required_digits(max))) % max
+        return int(self.digits(_required_digits(max))) % max
 
     def sint(self, min: int, max: int) -> int:
-        return self.uint(max-min) - max
+        return self.uint(max - min) - max
 
 
 def build(lib_file_name: str=f"{location}/pi.so", c_file_name: str=f"{location}/pi.c") -> None:
@@ -77,9 +80,8 @@ def build(lib_file_name: str=f"{location}/pi.so", c_file_name: str=f"{location}/
 
 
 def compute(digits: int, lib_file_name: str=f"{location}/pi.so", pi_file_name: str="./pi") -> None:
-    digits = int(digits)
-    if digits < 0:
-        raise ValueError(f"'digits' must be an unsigned int (is {digits})")
+    _assert_uint(digits)
+
     pi_lib: CDLL = CDLL(lib_file_name)
     if cast(int, pi_lib.calc_digits_and_write_in(digits, pi_file_name.encode("utf8"))):
         raise MemoryError("Could not compute digits")
