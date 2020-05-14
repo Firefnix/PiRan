@@ -1,6 +1,6 @@
 """The PiRan module."""
-from os.path import isfile, getsize as get_len_of_file
-from os import remove, getcwd
+from os.path import isfile, getsize as get_len_of_file, abspath, dirname
+from os import remove
 from sys import maxsize, stdout, stderr
 from ctypes import CDLL, cast as c_cast, c_char_p
 from typing import Optional, IO, Union, cast
@@ -9,6 +9,8 @@ __author__ = "Firefnix"
 __license__ = "GPL-3-or-later"
 __version__ = "1.0"
 
+location = abspath(dirname(__file__))
+del dirname, abspath
 
 def required_digits(max_value: int) -> int:
     return len(str(max_value + 1))
@@ -66,7 +68,7 @@ class Random:
         return self.uint(max-min) - max
 
 
-def build(lib_file_name: str="./pi.so", c_file_name: str="./pi.c") -> None:
+def build(lib_file_name: str=f"{location}/pi.so", c_file_name: str=f"{location}/pi.c") -> None:
     from subprocess import run
     run(
         f"gcc -O2 -shared -Wl,-soname,pi -o {lib_file_name} -fPIC {c_file_name} -lgmp",
@@ -74,7 +76,7 @@ def build(lib_file_name: str="./pi.so", c_file_name: str="./pi.c") -> None:
     )
 
 
-def compute(digits: int, lib_file_name: str="./pi.so", pi_file_name: str="./pi") -> None:
+def compute(digits: int, lib_file_name: str=f"{location}/pi.so", pi_file_name: str="./pi") -> None:
     digits = int(digits)
     if digits < 0:
         raise ValueError(f"'digits' must be an unsigned int (is {digits})")
