@@ -31,4 +31,5 @@ setup(
         'Bug Reports': 'https://github.com/Firefnix/PiRan/issues',
         'Source': github
     },
+    license='LGPLv3'
 )
