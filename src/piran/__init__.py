@@ -53,9 +53,11 @@ class Random:
         self.set_cursor(self.get_cursor() + value)
         return self.get_cursor()
 
-    def close(self) -> None:
+    def close(self) -> int:
         """Delete the cursor file."""
+        cursor = self.get_cursor()
         remove(self._cursor_file_name)
+        return cursor
 
     def digits(self, length: int) -> str:
         with open(self._pi_file_name) as pi_file:
@@ -79,9 +81,9 @@ def build(lib_file_name: str=f"{location}/pi.so", c_file_name: str=f"{location}/
     )
 
 
-def compute(digits: int, lib_file_name: str=f"{location}/pi.so", pi_file_name: str="./pi") -> None:
+def compute(digits: int, lib_file_name: str=f"{location}/pi.so", pi_file_name: str=f"{location}/pi") -> None:
     _assert_uint(digits)
 
     pi_lib: CDLL = CDLL(lib_file_name)
-    if cast(int, pi_lib.calc_digits_and_write_in(digits, pi_file_name.encode("utf8"))):
+    if cast(int, pi_lib.calc_digits_and_write_in(digits, pi_file_name.encode("utf-8"))):
         raise MemoryError("Could not compute digits")
