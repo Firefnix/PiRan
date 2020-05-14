@@ -30,12 +30,13 @@ setup(
     ],
     keywords='math pi random',
     package_dir={'': 'src'},
-    packages=find_packages(where='src'),
+    packages=[],
     python_requires='>=3.5, <4',
     project_urls={
         'Bug Reports': 'https://github.com/Firefnix/PiRan/issues',
         'Source': github
     },
     license='LGPLv3',
-    ext_modules=[pigen_module]
+    # ext_modules=[pigen_module],
+    package_data={'': ['src/piran/pigen.so']},
 )
