@@ -73,15 +73,15 @@ class Random:
         return self.uint(max - min) - max
 
 
-def build(lib_file_name: str=f"{location}/pi.so", c_file_name: str=f"{location}/pi.c") -> None:
+def build(lib_file_name: str=f"{location}/pigen.so", c_file_name: str=f"{location}/pigen.c") -> None:
     from subprocess import run
     run(
-        f"gcc -O2 -shared -Wl,-soname,pi -o {lib_file_name} -fPIC {c_file_name} -lgmp",
+        f"gcc -O2 -shared -Wl,-soname,pigen -o {lib_file_name} -fPIC {c_file_name} -lgmp",
         shell=True, check=True
     )
 
 
-def compute(digits: int, lib_file_name: str=f"{location}/pi.so", pi_file_name: str=f"{location}/pi") -> None:
+def compute(digits: int, lib_file_name: str=f"{location}/pigen.so", pi_file_name: str=f"{location}/pi") -> None:
     _assert_uint(digits)
 
     pi_lib: CDLL = CDLL(lib_file_name)
