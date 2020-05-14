@@ -37,9 +37,10 @@ To build the digits calculator and compute:
 ```py
 from piran import build, compute
 build() # pi.c -> pi.so
-compute(1E4) # Ten thousand digits!
+compute(10000) # Ten thousand digits!
 ```
-Note that this is only needed once.
+Note that this is only needed once. Ten thousand digits are usually computed in
+less than a second.
 Now we can really use the library:
 ```py
 from piran import Random
