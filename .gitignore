@@ -3,11 +3,7 @@ dist/
 test/
 *.egg-info/
 *.egg
-*.py[cod]
 __pycache__/
-*~
 make.sh
-
-# Not sure of that
 Pipfile
 Pipfile.lock
