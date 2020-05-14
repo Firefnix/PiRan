@@ -5,5 +5,4 @@ test/
 *.egg
 *.py[cod]
 __pycache__/
-*.so
 *~
