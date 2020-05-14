@@ -4,7 +4,7 @@ test/
 *.egg-info/
 *.egg
 __pycache__/
-make.sh
+action
 Pipfile
 Pipfile.lock
 pi
