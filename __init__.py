@@ -19,8 +19,8 @@ class Random:
 
     def __init__(self, pi_file_name: str = "pi",
         cursor: Union[str, int, None] = None) -> None:
-        self._cursor_file_name: str
 
+        self._cursor_file_name: str
         if isfile(pi_file_name) is False:
             raise FileNotFoundError(f"{pi_file_name} not found")
 
@@ -66,16 +66,18 @@ class Random:
         return self.uint(max-min) - max
 
 
-def build() -> None:
+def build(lib_file_name: str="./pi.so", c_file_name: str="./pi.c") -> None:
     from subprocess import run
     run(
-        "gcc -O2 -shared -Wl,-soname,pi -o pi.so -fPIC pi.c -lgmp",
+        f"gcc -O2 -shared -Wl,-soname,pi -o {lib_file_name} -fPIC {c_file_name} -lgmp",
         shell=True, check=True
     )
 
+
 def compute(digits: int, lib_file_name: str="./pi.so", pi_file_name: str="./pi") -> None:
+    digits = int(digits)
     if digits < 0:
-        raise ValueError("'digits' must be an unsigned int")
+        raise ValueError(f"'digits' must be an unsigned int (is {digits})")
     pi_lib: CDLL = CDLL(lib_file_name)
     if cast(int, pi_lib.calc_digits_and_write_in(digits, pi_file_name.encode("utf8"))):
-        raise MemoryError("Could")
+        raise MemoryError("Could not compute digits")
