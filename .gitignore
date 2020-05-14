@@ -6,3 +6,4 @@ test/
 *.py[cod]
 __pycache__/
 *~
+make.sh
