@@ -1,5 +1,5 @@
 """The PiRan module."""
-from os.path import isfile, getsize as get_len_of_file, abspath, dirname
+from os.path import isfile, getsize as get_len_of_file, abspath as _abspath, dirname
 from os import remove
 from sys import maxsize, stdout, stderr
 from ctypes import CDLL, cast as c_cast, c_char_p
@@ -9,8 +9,8 @@ __author__ = "Firefnix"
 __license__ = "GPL-3-or-later"
 __version__ = "1.0"
 
-location = abspath(dirname(__file__))
-del dirname, abspath
+location = _abspath(dirname(__file__))
+del dirname
 
 def _required_digits(max_value: int) -> int:
     return len(str(max_value + 1))
@@ -22,12 +22,12 @@ def _assert_uint(arg: object) -> None:
 class Random:
     """Use random numbers, bytes and chars."""
 
-    def __init__(self, pi_file_name: str = "pi",
+    def __init__(self, pi_file_name: str = f"{location}pi",
         cursor: Union[str, int, None] = None) -> None:
 
         self._cursor_file_name: str
         if isfile(pi_file_name) is False:
-            raise FileNotFoundError(f"{pi_file_name} not found")
+            raise FileNotFoundError(f"{_abspath(pi_file_name)} not found")
 
         if isinstance(cursor, str) is True:
             self._cursor_file_name = cast(str, cursor)
