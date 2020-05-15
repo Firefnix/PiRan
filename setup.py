@@ -14,7 +14,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 # python3 -m pip install -e git+https://https://github.com/Firefnix/PiRan.git#egg=piran
 setup(
     name='piran',
-    version='0.1a0.1',
+    version='0.1b',
     description='"Random" numbers based in pi\'s decimals',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -29,14 +29,14 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
     ],
     keywords='math pi random',
-    package_dir={'': 'src'},
-    packages=[],
+    package_dir={'piran': 'src'},
+    packages=['piran'],
     python_requires='>=3.5, <4',
     project_urls={
         'Bug Reports': 'https://github.com/Firefnix/PiRan/issues',
         'Source': github
     },
     license='LGPLv3',
-    # ext_modules=[pigen_module],
-    package_data={'': ['src/piran/pigen.so']},
+    ext_modules=[pigen_module],
+    package_data={'piran': ['src/piran/pigen.so']},
 )
